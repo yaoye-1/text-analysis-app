@@ -5,13 +5,12 @@ import jieba
 from collections import Counter
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.font_manager import FontProperties
 from pyecharts.charts import WordCloud, Bar, Line, Pie, Scatter, Radar, HeatMap
 from pyecharts import options as opts
 import string
 import re
 import pandas as pd
-plt.rcParams['font.sans-serif'] = ['SimHei']  # 用黑体显示中文
-plt.rcParams['axes.unicode_minus'] = False    # 正常显示负号
 
 
 # 对文本分词
@@ -63,6 +62,11 @@ def plot_line(word_freq):
     )
     return line
 # 使用Matplotlib绘制柱状图
+
+# 假设 simhei.ttf 文件位于当前工作目录下的 fonts 文件夹中
+font_path = './simsun.ttc'
+font = FontProperties(fname=font_path, size=12)
+
 def plot_bar_with_matplotlib(word_freq):
     fig, ax = plt.subplots(figsize=(10, 7))
 
@@ -76,19 +80,18 @@ def plot_bar_with_matplotlib(word_freq):
 
     # 明确设置y轴的标签
     ax.set_yticks(range(len(words)))
-    ax.set_yticklabels(words)
+    ax.set_yticklabels(words, fontproperties=font)
 
-    ax.set_xlabel('频率')
-    ax.set_title('词频排名前20')
+    ax.set_xlabel('频率', fontproperties=font)
+    ax.set_title('词频排名前20', fontproperties=font)
 
     # 调整布局以防止标签被裁剪
     plt.tight_layout()
 
     # 旋转标签以适应空间
-    plt.xticks(rotation=45)
+    plt.xticks(fontproperties=font, rotation=45)
 
     st.pyplot(fig)
-
 # 使用Seaborn绘制热力图
 def plot_heatmap_with_seaborn(word_freq):
     data = pd.DataFrame(list(word_freq.items()), columns=['词汇', '频率'])
